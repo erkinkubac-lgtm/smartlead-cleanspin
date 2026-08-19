@@ -1,0 +1,8 @@
+# SmartLead AI - CleanSpin | Dogrudan bagimliliklar
+# Kurulum: pip install -r requirements.txt
+
+Flask==3.1.3          # Web cercevesi (mikro sunucu)
+Flask-Cors            # Wix arayuzunun API'ye erisebilmesi icin CORS
+python-dotenv         # .env dosyasindaki gizli anahtarlari okur
+requests==2.34.2      # Groq API'sine HTTP istegi atmak icin
+gunicorn              # Render uzerinde production sunucusu

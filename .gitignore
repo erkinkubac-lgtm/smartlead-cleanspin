@@ -1,0 +1,20 @@
+# KRITIK: gizli anahtarlar asla GitHub'a gitmez
+.env
+
+# Sanal ortam
+venv/
+
+# Python onbellek
+__pycache__/
+*.py[cod]
+
+# Veritabani (yerel calisma dosyasi)
+*.db
+*.sqlite
+*.sqlite3
+
+# Editor / isletim sistemi
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
