@@ -21,7 +21,7 @@ class AIService:
             "model": self.model,
             "messages": mesajlar,
             "temperature": 0.7,
-            "max_tokens": 300
+            "max_tokens": 200
         }
         try:
             yanit = requests.post(self.api_url, headers=headers, json=body, timeout=10)
