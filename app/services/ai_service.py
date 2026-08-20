@@ -1,4 +1,5 @@
 import requests
+import re
 from config import Config
 
 class AIServiceError(Exception):
@@ -12,6 +13,24 @@ class AIService:
         self.model="openai/gpt-oss-20b"
     def _sistem_mesaji_olustur(self):
         return {"role": "system", "content": self.business_context}
+
+    def _cevabi_temizle(self, metin):
+        # ** kalın yazı ** işaretlerini kaldır, içindeki yazıyı koru
+        metin = re.sub(r"\*\*(.*?)\*\*", r"\1", metin)
+
+        # Tablo satırlarını (| ... | ve |---|---| gibi) kaldır
+        satirlar = metin.split("\n")
+        satirlar = [s for s in satirlar if not re.match(r"^[\|\-\s]+$", s)]
+        metin = "\n".join(satirlar).replace("|", " ")
+
+        # Yarım kalan son cümleyi kes, son tam noktada bitir
+        son_nokta = max(metin.rfind("."), metin.rfind("!"), metin.rfind("?"))
+        if son_nokta != -1:
+            metin = metin[:son_nokta + 1]
+
+        return metin.strip()
+
+
     def _grog_istegi_at(self, mesajlar):
         headers = {
             "Authorization": f"Bearer {self.api_key}",
@@ -21,7 +40,8 @@ class AIService:
             "model": self.model,
             "messages": mesajlar,
             "temperature": 0.7,
-            "max_tokens": 300
+            "max_tokens": 300,
+            "reasoning_effort": "low"
         }
         try:
             yanit = requests.post(self.api_url, headers=headers, json=body, timeout=10)
@@ -42,7 +62,9 @@ class AIService:
 
 
         mesajlar = [self._sistem_mesaji_olustur()] + gecmis + [{"role": "user", "content": mesaj}]
-        return self._grog_istegi_at(mesajlar)
+        ham_cevap = self._grog_istegi_at(mesajlar)
+        return self._cevabi_temizle(ham_cevap)
+
         
 
 
