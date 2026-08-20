@@ -28,7 +28,11 @@ class AIService:
         if son_nokta != -1:
             metin = metin[:son_nokta + 1]
 
-        return metin.strip()
+        metin = metin.strip()
+        if not metin:
+            return "Bu konuda size yardımcı olmak isterim — daha spesifik bir soru sorar mısınız?"
+        return metin
+    
 
 
     def _grog_istegi_at(self, mesajlar):
@@ -39,7 +43,7 @@ class AIService:
         body = {
             "model": self.model,
             "messages": mesajlar,
-            "temperature": 0.7,
+            "temperature": 0.4,
             "max_tokens": 300,
             "reasoning_effort": "low"
         }
