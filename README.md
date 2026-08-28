@@ -9,7 +9,7 @@ Sistem iki arayüzden oluşur:
 ## Canlı bağlantılar
 
 - **Backend (Render):** https://cleanspin-backend.onrender.com
-- **Wix sitesi:** _(yayınlandıktan sonra buraya eklenecek)_
+- **Wix sitesi:** https://erkinkubac.wixstudio.com/cleanspinhijyen
 
 ## Teknoloji yığını
 
