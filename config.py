@@ -4,13 +4,13 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-class Config:
+class Config: ## Bir tanesi anahtar adı diğeri ise varsayılan değer mesela bu isimde ayar var mı yoksa varsayılan değeri kullan
     SECRET_KEY = os.environ.get("SECRET_KEY","geliştirme-icin-gecici-anahtar")
     DATABASE_URL = os.environ.get("DATABASE_URL","cleanspin_leads.db")
     GROQ_API_KEY = os.environ.get("GROQ_API_KEY","")
     AI_PROVIDER = os.environ.get("AI_PROVIDER","groq")
     CORS_ORIGINS = os.environ.get("CORS_ORIGINS","*")
-    BUSINESS_CONTEXT ="""Kimlik — CleanSpin'in satış asistanısın
+    BUSINESS_CONTEXT ="""Kimlik — CleanSpin'in satış asistanısın 
 Ürün — çift hazneli, santrifüj mekanizmalı akıllı temizlik kovası
 Faydalar — kirli/temiz su tamamen ayrı → kirli su ile temas yok; bezi elle sıkmaya gerek yok; nem ayarlanabilir, parkede iz bırakmaz; su ve deterjan tasarrufu
 Kitle — bireysel (ev/ofis) ve kurumsal (otel, restoran, hastane, temizlik şirketi). Müşterinin hangisi olduğunu anlamaya çalış, ona göre konuş
@@ -24,16 +24,17 @@ Format — cevapların en fazla 2-4 kısa cümle olsun, düz akıcı metin halin
 Tablo, madde işareti (- ile başlayan liste), kalın yazı (**) ASLA kullanma —
 bunlar sohbet kutusunda düzgün görünmüyor, sadece cümle cümle anlat.
 """
-
-class DevelopmentConfig(Config):
+##Business Context ise markanın kimliğini, ürünün ne olduğunu, faydalarını, hedef kitlesini, marka bilgisini ve
+#  tonunu belirten bir metin. Bu metin, AI modelinin yanıtlarını şekillendirmek için kullanılır.
+class DevelopmentConfig(Config): ##burada Miras kullanıyoruz.Config sınıfını miras alıyoruz ve sadece DEBUG değerini değiştiriyoruz.
     DEBUG = True
-class ProductionConfig(Config):
+class ProductionConfig(Config): ## Aynı şekilde.
     DEBUG = False
 
 
 
 
-config = {
+config = { #isimden sınıfa dönüştürüyoruz bunu da run.py de çağırıyoruz.
     "development": DevelopmentConfig,
     "production": ProductionConfig,
     "default": DevelopmentConfig,
