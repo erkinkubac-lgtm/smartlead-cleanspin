@@ -23,16 +23,19 @@ def sohbet():
     return jsonify({"basari": True, "cevap": cevap})
 @api.route("/leads", methods=["POST"])
 def lead_kaydet():
-    veri= request.get_json()
+    veri = request.get_json()
     isim = veri.get("isim", "")
     telefon = veri.get("telefon", "")
-    mesaj = veri.get("mesaj", "")
-    musteri_tipi = veri.get("musteri_tipi")
+    eposta = veri.get("eposta", "")
+    
+    
+
+   
 
     if not isim or not telefon:
         return jsonify({"error": "İsim ve telefon alanları zorunludur"}), 400
 
-    yeni_id = database.lead_ekle(isim, telefon, mesaj, musteri_tipi)
+    yeni_id = database.lead_ekle(isim, telefon, eposta)
     return jsonify({"basari": True, "id": yeni_id}), 201
 
 
