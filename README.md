@@ -30,9 +30,10 @@ smartlead_ai/
 └── app/
     ├── __init__.py         # Uygulama fabrikası (create_app)
     ├── database.py         # SQLite işlemleri (SADECE burada SQL var)
-    ├── routes.py           # HTTP uç noktaları (yönlendirme, SQL/AI kodu yok)
+    ├── routes.py           # HTTP uç noktaları (yönlendirme, SQL/AI/giriş kodu yok)
     └── services/
-        └── ai_service.py   # Groq API çağrıları (SADECE burada AI çağrısı var)
+        ├── ai_service.py   # Groq API çağrıları (SADECE burada AI çağrısı var)
+        └── auth_service.py # Giriş (login) token'larının üretimi/doğrulanması
 ```
 
 Her dosyanın tek bir sorumluluğu vardır (Separation of Concerns). Katmanlar birbirinin işini yapmaz — `routes.py` sadece `database.py` ve `ai_service.py`'deki hazır fonksiyonları çağırır.
@@ -43,8 +44,9 @@ Her dosyanın tek bir sorumluluğu vardır (Separation of Concerns). Katmanlar b
 |---|---|---|
 | `GET` | `/health` | Sunucu canlılık kontrolü |
 | `POST` | `/api/sohbet` | Kullanıcı mesajını yapay zekâya iletir, cevap döner |
-| `POST` | `/api/leads` | Yeni bir lead (isim, telefon) kaydeder |
-| `GET` | `/api/leads` | Kayıtlı tüm lead'leri listeler |
+| `POST` | `/api/leads` | Yeni bir lead (isim, telefon) kaydeder — herkese açık (ziyaretçi formu) |
+| `POST` | `/api/login` | Kullanıcı adı/şifre doğrularsa bir giriş token'ı döner |
+| `GET` | `/api/leads` | Kayıtlı tüm lead'leri listeler — **korumalı**, geçerli bir `Authorization: Bearer <token>` başlığı gerektirir |
 
 ## Yerelde Çalıştırma
 
@@ -65,7 +67,11 @@ AI_PROVIDER=groq
 DATABASE_URL=cleanspin_leads.db
 CORS_ORIGINS=*
 FLASK_ENV=development
+ADMIN_USERS=erkin:sifre1,ayse:sifre2,mehmet:sifre3   # dashboard'a girecek kişiler, virgülle ayrılmış "kullanici_adi:sifre" ikilileri
+TOKEN_GECERLILIK_SANIYE=28800   # giriş token'ının geçerlilik süresi (varsayılan 8 saat)
 ```
+
+`ADMIN_USERS` içindeki kullanıcılar, sunucu her başladığında `users` tablosuna (yeniden) yazılır — böylece Render'ın ücretsiz planında veritabanı sıfırlansa bile giriş bilgileri kaybolmaz. Bir kişinin şifresini değiştirmek için bu ortam değişkenini güncelleyip sunucuyu yeniden başlatmak yeterlidir.
 
 Sonra çalıştır:
 
@@ -80,7 +86,9 @@ python run.py
 - Tüm SQL sorguları `?` yer tutucusuyla parametreli çalışır (SQL Injection koruması).
 - `.env` dosyası `.gitignore` içinde, GitHub'a hiç yüklenmez.
 - Render'da ortam değişkenleri panelden ayrı ayarlanır, kodda gizli bilgi yoktur.
+- `GET /api/leads` artık girişsiz çalışmaz: şifreler veritabanında düz metin değil, hash'lenmiş olarak (`werkzeug.security`) saklanır; giriş başarılı olduğunda süreli, imzalı bir token (`itsdangerous`) üretilir ve her istekte `Authorization: Bearer <token>` başlığıyla doğrulanır.
 
 ## Bilinen Sınırlamalar
 
-- Render'ın ücretsiz planı kalıcı disk sağlamadığı için, sunucu 15 dakika hareketsiz kalıp yeniden başladığında SQLite veritabanı sıfırlanır. Gerçek üretimde kalıcı bir veritabanı (PostgreSQL) kullanılırdı.
+- Render'ın ücretsiz planı kalıcı disk sağlamadığı için, sunucu 15 dakika hareketsiz kalıp yeniden başladığında SQLite veritabanı sıfırlanır. Gerçek üretimde kalıcı bir veritabanı (PostgreSQL) kullanılırdı. `users` tablosu bu sıfırlanmadan etkilenmez çünkü her başlangıçta `ADMIN_USERS`'tan yeniden kurulur; ancak sıfırlanma anında kaydedilmiş `leads` verileri kaybolur.
+- `CORS_ORIGINS` hâlâ varsayılan olarak `*` (tüm kaynaklara açık); bir sonraki adım olarak bunun sadece Wix sitesinin adresine (`https://erkinkubac.wixstudio.com`) daraltılması önerilir.

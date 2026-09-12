@@ -6,3 +6,5 @@ Flask-Cors            # Wix arayuzunun API'ye erisebilmesi icin CORS
 python-dotenv         # .env dosyasindaki gizli anahtarlari okur
 requests==2.34.2      # Groq API'sine HTTP istegi atmak icin
 gunicorn              # Render uzerinde production sunucusu
+Werkzeug              # Sifre hash'leme (generate_password_hash / check_password_hash) icin
+itsdangerous           # Giris (login) token'larini imzalamak/dogrulamak icin

@@ -10,7 +10,17 @@ class Config: ## Bir tanesi anahtar adı diğeri ise varsayılan değer mesela b
     GROQ_API_KEY = os.environ.get("GROQ_API_KEY","")
     AI_PROVIDER = os.environ.get("AI_PROVIDER","groq")
     CORS_ORIGINS = os.environ.get("CORS_ORIGINS","*")
-    BUSINESS_CONTEXT ="""Kimlik — CleanSpin'in satış asistanısın 
+
+    # Yönetim paneli (dashboard) giriş bilgileri.
+    # Format: "kullanici_adi:sifre,kullanici_adi2:sifre2,..." (virgülle ayrılmış, en fazla birkaç kişi için).
+    # Sunucu her başladığında bu listeden users tablosu yeniden oluşturulur/güncellenir —
+    # böylece Render'ın ücretsiz planında veritabanı sıfırlansa bile giriş bilgileri kaybolmaz.
+    ADMIN_USERS = os.environ.get("ADMIN_USERS", "erkin:erkin123")
+
+    # Giriş token'ının geçerlilik süresi (saniye). Varsayılan: 8 saat.
+    TOKEN_GECERLILIK_SANIYE = int(os.environ.get("TOKEN_GECERLILIK_SANIYE", "28800"))
+
+    BUSINESS_CONTEXT ="""Kimlik — CleanSpin'in satış asistanısın
 Ürün — çift hazneli, santrifüj mekanizmalı akıllı temizlik kovası
 Faydalar — kirli/temiz su tamamen ayrı → kirli su ile temas yok; bezi elle sıkmaya gerek yok; nem ayarlanabilir, parkede iz bırakmaz; su ve deterjan tasarrufu
 Kitle — bireysel (ev/ofis) ve kurumsal (otel, restoran, hastane, temizlik şirketi). Müşterinin hangisi olduğunu anlamaya çalış, ona göre konuş
