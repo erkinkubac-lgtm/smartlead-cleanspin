@@ -15,7 +15,7 @@ class Config: ## Bir tanesi anahtar adı diğeri ise varsayılan değer mesela b
     # Format: "kullanici_adi:sifre,kullanici_adi2:sifre2,..." (virgülle ayrılmış, en fazla birkaç kişi için).
     # Sunucu her başladığında bu listeden users tablosu yeniden oluşturulur/güncellenir —
     # böylece Render'ın ücretsiz planında veritabanı sıfırlansa bile giriş bilgileri kaybolmaz.
-    ADMIN_USERS = os.environ.get("ADMIN_USERS", "erkin:erkin123")
+    ADMIN_USERS = os.environ.get("ADMIN_USERS", "erkin:Erkin1234")
 
     # Giriş token'ının geçerlilik süresi (saniye). Varsayılan: 8 saat.
     TOKEN_GECERLILIK_SANIYE = int(os.environ.get("TOKEN_GECERLILIK_SANIYE", "28800"))
