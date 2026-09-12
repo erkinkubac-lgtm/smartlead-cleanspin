@@ -22,12 +22,12 @@ def init_db(app):
     conn.commit()
     conn.close()
 
-def lead_ekle(isim, telefon, mesaj, musteri_tipi=None):
-    sql = """INSERT INTO leads (isim, telefon, mesaj, musteri_tipi)
+def lead_ekle(isim, telefon, eposta):
+    sql = """INSERT INTO leads (isim, telefon, eposta )
              VALUES (?, ?, ?, ?)"""
 
     conn = get_db()
-    cursor = conn.execute(sql, (isim, telefon, mesaj, musteri_tipi))
+    cursor = conn.execute(sql, (isim, telefon, eposta))
     yeni_id = cursor.lastrowid
     conn.commit()
     conn.close()
